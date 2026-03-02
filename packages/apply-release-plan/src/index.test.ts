@@ -2075,7 +2075,7 @@ describe("apply release plan", () => {
       - Hey, let's have fun with testing!`);
     });
 
-    it("should insert new entry before existing version heading when no package title", async () => {
+    it("should insert new entry before existing version heading when no package title is present", async () => {
       const releasePlan = new FakeReleasePlan();
       let { changedFiles } = await testSetup(
         {
@@ -2107,11 +2107,20 @@ describe("apply release plan", () => {
       if (!readmePath) throw new Error(`could not find an updated changelog`);
       let readme = await fs.readFile(readmePath, "utf-8");
 
-      const idx110 = readme.indexOf("## 1.1.0");
-      const idx100 = readme.indexOf("## 1.0.0");
-      expect(idx110).not.toBe(-1);
-      expect(idx100).not.toBe(-1);
-      expect(idx110).toBeLessThan(idx100);
+      expect(readme).toMatchInlineSnapshot(`
+        "## 1.1.0
+
+        ### Minor Changes
+
+        - Hey, let's have fun with testing!
+
+        ## 1.0.0
+
+        ### Minor Changes
+
+        - Initial release
+        "
+      `);
     });
 
     it("should update a changelog for two packages", async () => {
