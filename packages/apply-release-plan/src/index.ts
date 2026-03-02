@@ -335,7 +335,7 @@ async function prependFile(
   const isVersionHeading = /^#{1,6}\s+\d+\.\d+/.test(fileData);
   if (isVersionHeading) {
     // file starts with a version heading (no package title) - prepend before everything
-    newChangelog = data + fileData;
+    newChangelog = data.trimStart() + fileData;
   } else {
     const index = fileData.indexOf("\n");
     newChangelog =
