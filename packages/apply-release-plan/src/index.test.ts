@@ -83,7 +83,7 @@ async function testSetup(
   releasePlan: ReleasePlan,
   config?: Config,
   snapshot?: string | undefined,
-  setupFunc?: (tempDir: string) => Promise<any>
+  setupFunc?: (tempDir: string) => Promise<void>
 ) {
   if (!config) {
     config = {
@@ -2009,6 +2009,7 @@ describe("apply release plan", () => {
       });
     });
   });
+
   describe("changelogs", () => {
     it("should not generate any changelogs", async () => {
       const releasePlan = new FakeReleasePlan();
@@ -2086,6 +2087,8 @@ describe("apply release plan", () => {
             name: "pkg-a",
             version: "1.0.0",
           }),
+          "packages/pkg-a/CHANGELOG.md":
+            "## 1.0.0\n\n### Minor Changes\n\n- Initial release\n",
         },
         releasePlan.getReleasePlan(),
         {
@@ -2094,13 +2097,6 @@ describe("apply release plan", () => {
             path.resolve(__dirname, "test-utils/simple-get-changelog-entry"),
             null,
           ],
-        },
-        undefined,
-        async (tempDir) => {
-          await fs.writeFile(
-            path.join(tempDir, "packages", "pkg-a", "CHANGELOG.md"),
-            "## 1.0.0\n\n### Minor Changes\n\n- Initial release\n"
-          );
         }
       );
 
@@ -2813,6 +2809,7 @@ describe("apply release plan", () => {
       - Hey, let's have fun with testing!`);
     });
   });
+
   describe("should error and not write if", () => {
     // This is skipped as *for now* we are assuming we have been passed
     // valid releasePlans - this may get work done on it in the future
@@ -2995,6 +2992,7 @@ describe("apply release plan", () => {
       })
     );
   });
+
   describe("changesets", () => {
     it("should delete one changeset after it is applied", async () => {
       const releasePlan = new FakeReleasePlan();
