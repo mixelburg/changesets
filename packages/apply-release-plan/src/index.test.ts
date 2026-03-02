@@ -263,6 +263,7 @@ describe("apply release plan", () => {
         version: "1.1.0",
       });
     });
+
     it("should not update ranges set to *", async () => {
       const releasePlan = new FakeReleasePlan(
         [
@@ -318,6 +319,7 @@ describe("apply release plan", () => {
         },
       });
     });
+
     it("should update workspace ranges", async () => {
       const releasePlan = new FakeReleasePlan(
         [
@@ -373,6 +375,7 @@ describe("apply release plan", () => {
         },
       });
     });
+
     it("should not update workspace version aliases", async () => {
       const releasePlan = new FakeReleasePlan(
         [
@@ -464,6 +467,7 @@ describe("apply release plan", () => {
         },
       });
     });
+
     it("should update workspace ranges only with bumpVersionsWithWorkspaceProtocolOnly", async () => {
       const releasePlan = new FakeReleasePlan(
         [
@@ -554,6 +558,7 @@ describe("apply release plan", () => {
         },
       });
     });
+
     it("should update a version for two packages with different new versions", async () => {
       const releasePlan = new FakeReleasePlan(
         [],
@@ -611,6 +616,7 @@ describe("apply release plan", () => {
         version: "2.0.0",
       });
     });
+
     it("should not update the version of the dependent package if the released dep is a dev dep", async () => {
       let { changedFiles } = await testSetup(
         {
@@ -706,6 +712,7 @@ describe("apply release plan", () => {
         version: "1.1.0",
       });
     });
+
     it("should skip dependencies that have the same name as the package", async () => {
       let { tempDir } = await testSetup(
         {
@@ -769,6 +776,7 @@ describe("apply release plan", () => {
         },
       });
     });
+
     it("should not update dependent versions when a package has a changeset type of none", async () => {
       let { changedFiles } = await testSetup(
         {
@@ -826,6 +834,7 @@ describe("apply release plan", () => {
         version: "1.0.0",
       });
     });
+
     it("should not update workspace dependent versions when a package has a changeset type of none", async () => {
       let { changedFiles } = await testSetup(
         {
@@ -883,6 +892,7 @@ describe("apply release plan", () => {
         version: "1.0.0",
       });
     });
+
     it("should use exact versioning when snapshot release is applied, and ignore any range modifiers", async () => {
       const releasePlan = new FakeReleasePlan(
         [
@@ -2024,6 +2034,7 @@ describe("apply release plan", () => {
         changedFiles.find((a) => a.endsWith(`pkg-a${path.sep}CHANGELOG.md`))
       ).toBeUndefined();
     });
+
     it("should update a changelog for one package", async () => {
       const releasePlan = new FakeReleasePlan();
       let { changedFiles } = await testSetup(
@@ -2062,6 +2073,7 @@ describe("apply release plan", () => {
 
       - Hey, let's have fun with testing!`);
     });
+
     it("should insert new entry before existing version heading when no package title", async () => {
       const releasePlan = new FakeReleasePlan();
       let { changedFiles } = await testSetup(
@@ -2105,6 +2117,7 @@ describe("apply release plan", () => {
       expect(idx100).not.toBe(-1);
       expect(idx110).toBeLessThan(idx100);
     });
+
     it("should update a changelog for two packages", async () => {
       const releasePlan = new FakeReleasePlan(
         [],
@@ -2175,6 +2188,7 @@ describe("apply release plan", () => {
 
       ## 2.0.0`);
     });
+
     it("should not update the changelog if only devDeps changed", async () => {
       let { changedFiles } = await testSetup(
         {
@@ -2856,6 +2870,7 @@ describe("apply release plan", () => {
         )}`
       );
     });
+
     it("a package cannot be found", async () => {
       let releasePlan = new FakeReleasePlan(
         [],
@@ -2914,6 +2929,7 @@ describe("apply release plan", () => {
 
       throw new Error("Expected test to exit before this point");
     });
+
     it(
       "a provided changelog function fails",
       temporarilySilenceLogs(async () => {
@@ -3016,6 +3032,7 @@ describe("apply release plan", () => {
       let pathExists = await fs.pathExists(changesetPath);
       expect(pathExists).toEqual(false);
     });
+
     it("should NOT delete changesets for ignored packages", async () => {
       const releasePlan = new FakeReleasePlan();
 
@@ -3052,6 +3069,7 @@ describe("apply release plan", () => {
       let pathExists = await fs.pathExists(changesetPath);
       expect(pathExists).toEqual(true);
     });
+
     it("should NOT delete changesets for private unversioned packages", async () => {
       const releasePlan = new FakeReleasePlan();
 
@@ -3092,6 +3110,7 @@ describe("apply release plan", () => {
       let pathExists = await fs.pathExists(changesetPath);
       expect(pathExists).toEqual(true);
     });
+
     it("should delete an old format changeset if it is applied", async () => {
       const releasePlan = new FakeReleasePlan();
 
