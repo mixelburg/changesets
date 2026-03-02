@@ -326,12 +326,16 @@ async function prependFile(
     );
     return;
   }
-  const firstLine = fileData.split("\n")[0];
-  const isVersionHeading = /^#{1,6}\s+\d+\.\d+/.test(firstLine);
+
   let newChangelog: string;
+
+  // Require just 2 version numbers here, assuming `## 1.1` is a valid version heading.
+  // Our version headings start with ##, we are more permissive here though.
+  // Note: we also need to handle prerelease versions here but that's already covered by the regex.
+  const isVersionHeading = /^#{1,6}\s+\d+\.\d+/.test(fileData);
   if (isVersionHeading) {
-    // File starts with a version heading (no package title) - prepend before everything
-    newChangelog = data.trimStart() + "\n\n" + fileData;
+    // file starts with a version heading (no package title) - prepend before everything
+    newChangelog = data + fileData;
   } else {
     const index = fileData.indexOf("\n");
     newChangelog =
