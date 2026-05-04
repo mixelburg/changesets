@@ -1,14 +1,19 @@
-import * as fs from "fs-extra";
+import fs from "node:fs/promises";
 import path from "path";
-import { PreState } from "@changesets/types";
+import type { PreState } from "@changesets/types";
 import { getPackages } from "@manypkg/get-packages";
 import {
   PreExitButNotInPreModeError,
   PreEnterButInPreModeError,
 } from "@changesets/errors";
 
+async function outputFile(filePath: string, content: string) {
+  await fs.mkdir(path.dirname(filePath), { recursive: true });
+  await fs.writeFile(filePath, content, "utf8");
+}
+
 export async function readPreState(
-  rootDir: string
+  rootDir: string,
 ): Promise<PreState | undefined> {
   let preStatePath = path.resolve(rootDir, ".changeset", "pre.json");
   // TODO: verify that the pre state isn't broken
@@ -40,16 +45,16 @@ export async function exitPre(rootDir: string) {
     throw new PreExitButNotInPreModeError();
   }
 
-  await fs.outputFile(
+  await outputFile(
     preStatePath,
-    JSON.stringify({ ...preState, mode: "exit" }, null, 2) + "\n"
+    JSON.stringify({ ...preState, mode: "exit" }, null, 2) + "\n",
   );
 }
 
 export async function enterPre(rootDir: string, tag: string) {
   let packages = await getPackages(rootDir);
-  let preStatePath = path.resolve(packages.root.dir, ".changeset", "pre.json");
-  let preState: PreState | undefined = await readPreState(packages.root.dir);
+  let preStatePath = path.resolve(packages.rootDir, ".changeset", "pre.json");
+  let preState: PreState | undefined = await readPreState(packages.rootDir);
   // can't reenter if pre mode still exists, but we should allow exited pre mode to be reentered
   if (preState?.mode === "pre") {
     throw new PreEnterButInPreModeError();
@@ -63,8 +68,5 @@ export async function enterPre(rootDir: string, tag: string) {
   for (let pkg of packages.packages) {
     newPreState.initialVersions[pkg.packageJson.name] = pkg.packageJson.version;
   }
-  await fs.outputFile(
-    preStatePath,
-    JSON.stringify(newPreState, null, 2) + "\n"
-  );
+  await outputFile(preStatePath, JSON.stringify(newPreState, null, 2) + "\n");
 }

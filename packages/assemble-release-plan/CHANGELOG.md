@@ -1,5 +1,41 @@
 # @changesets/assemble-release-plan
 
+## 7.0.0-next.2
+
+### Major Changes
+
+- [#1655](https://github.com/changesets/changesets/pull/1655) [`db46911`](https://github.com/changesets/changesets/commit/db46911e57603f20a158a47bbbebd112272c84e2) Thanks [@bluwy](https://github.com/bluwy)! - Update `@manypkg/get-packages` which drops support for detecting packages in Bolt monorepos and adds support for npm monorepos
+
+### Patch Changes
+
+- Updated dependencies [[`c19b112`](https://github.com/changesets/changesets/commit/c19b1123d27986da0e14e99d65b0f9a408def35c), [`db46911`](https://github.com/changesets/changesets/commit/db46911e57603f20a158a47bbbebd112272c84e2)]:
+  - @changesets/types@7.0.0-next.2
+  - @changesets/get-dependents-graph@3.0.0-next.2
+  - @changesets/should-skip-package@1.0.0-next.2
+
+## 7.0.0-next.1
+
+### Major Changes
+
+- [#1656](https://github.com/changesets/changesets/pull/1656) [`268a29f`](https://github.com/changesets/changesets/commit/268a29fedc948f22c672a3b1e3e51df4427f478d) Thanks [@bluwy](https://github.com/bluwy)! - Bumps minimum node version to `>=20.0.0`
+
+### Patch Changes
+
+- Updated dependencies [[`268a29f`](https://github.com/changesets/changesets/commit/268a29fedc948f22c672a3b1e3e51df4427f478d)]:
+  - @changesets/get-dependents-graph@3.0.0-next.1
+  - @changesets/should-skip-package@1.0.0-next.1
+  - @changesets/errors@1.0.0-next.1
+  - @changesets/types@7.0.0-next.1
+
+## 6.0.10
+
+### Patch Changes
+
+- [#1888](https://github.com/changesets/changesets/pull/1888) [`036fdd4`](https://github.com/changesets/changesets/commit/036fdd451367226d0f2cd8af1e0a7f37a65e3464) Thanks [@mixelburg](https://github.com/mixelburg)! - Fix dependent bump detection for workspace path references. Dependencies declared with specifiers like `workspace:packages/pkg` are now resolved correctly when deciding whether dependents need a release.
+
+- Updated dependencies [[`036fdd4`](https://github.com/changesets/changesets/commit/036fdd451367226d0f2cd8af1e0a7f37a65e3464)]:
+  - @changesets/get-dependents-graph@2.1.4
+
 ## 6.0.9
 
 ### Patch Changes
@@ -17,6 +53,22 @@
 ### Patch Changes
 
 - [#1589](https://github.com/changesets/changesets/pull/1589) [`de8bebc`](https://github.com/changesets/changesets/commit/de8bebc93b81cb333c3c7e1ed8a3687926b7fcd8) Thanks [@remorses](https://github.com/remorses), [@vzt7](https://github.com/vzt7)! - Fixed a crash in prerelease mode when a package misses the version field in its `package.json`
+
+## 7.0.0-next.0
+
+### Major Changes
+
+- [#1479](https://github.com/changesets/changesets/pull/1479) [`7f34a00`](https://github.com/changesets/changesets/commit/7f34a00aab779a941a406b17f5a85895144fc0a5) Thanks [@bluwy](https://github.com/bluwy)! - Add `"engines"` field for explicit node version support. The supported node versions are `>=18.0.0`.
+
+- [#1482](https://github.com/changesets/changesets/pull/1482) [`df424a4`](https://github.com/changesets/changesets/commit/df424a4a09eea15b0fa9159ee0b98af0d95f58a7) Thanks [@Andarist](https://github.com/Andarist)! - From now on this package is going to be published as ES module.
+
+### Patch Changes
+
+- Updated dependencies [[`7f34a00`](https://github.com/changesets/changesets/commit/7f34a00aab779a941a406b17f5a85895144fc0a5), [`df424a4`](https://github.com/changesets/changesets/commit/df424a4a09eea15b0fa9159ee0b98af0d95f58a7)]:
+  - @changesets/get-dependents-graph@3.0.0-next.0
+  - @changesets/should-skip-package@1.0.0-next.0
+  - @changesets/errors@1.0.0-next.0
+  - @changesets/types@7.0.0-next.0
 
 ## 6.0.6
 

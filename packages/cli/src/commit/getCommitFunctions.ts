@@ -1,10 +1,16 @@
-import { CommitFunctions } from "@changesets/types";
+import type { CommitFunctions } from "@changesets/types";
 import path from "path";
-import resolveFrom from "resolve-from";
+import { resolve } from "import-meta-resolve";
+import { pathToFileURL } from "node:url";
+
+function importResolveFromDir(specifier: string, dir: string) {
+  return resolve(specifier, pathToFileURL(path.join(dir, "x.mjs")).toString());
+}
 
 export async function getCommitFunctions(
   commit: false | readonly [string, any],
-  cwd: string
+  cwd: string,
+  contextDir: string,
 ): Promise<[CommitFunctions, any]> {
   let commitFunctions: CommitFunctions = {};
   if (!commit) {
@@ -12,7 +18,13 @@ export async function getCommitFunctions(
   }
   let commitOpts: any = commit[1];
   let changesetPath = path.join(cwd, ".changeset");
-  let commitPath = resolveFrom(changesetPath, commit[0]);
+  let commitPath;
+
+  try {
+    commitPath = importResolveFromDir(commit[0], changesetPath);
+  } catch {
+    commitPath = importResolveFromDir(commit[0], contextDir);
+  }
 
   let possibleCommitFunc = await import(commitPath);
   if (possibleCommitFunc.default) {

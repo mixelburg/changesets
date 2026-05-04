@@ -1,19 +1,23 @@
-import { enterPre, exitPre, readPreState } from "./index";
-import * as fs from "fs-extra";
+import { enterPre, exitPre, readPreState } from "./index.ts";
+import fs from "node:fs/promises";
 import path from "path";
 import {
   PreEnterButInPreModeError,
   PreExitButNotInPreModeError,
 } from "@changesets/errors";
 import { testdir } from "@changesets/test-utils";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { describe, expect, it, test } from "vitest";
 
 describe("enterPre", () => {
   it("should enter", async () => {
     const cwd = await testdir({
       "package.json": JSON.stringify({
         private: true,
+        name: "root-pkg",
         workspaces: ["packages/*"],
       }),
+      "package-lock.json": "",
       "packages/pkg-a/package.json": JSON.stringify({
         name: "pkg-a",
         version: "1.0.0",
@@ -28,8 +32,11 @@ describe("enterPre", () => {
     });
     await enterPre(cwd, "next");
 
-    expect(await fs.readJson(path.join(cwd, ".changeset", "pre.json")))
-      .toMatchInlineSnapshot(`
+    expect(
+      JSON.parse(
+        await fs.readFile(path.join(cwd, ".changeset", "pre.json"), "utf8"),
+      ),
+    ).toMatchInlineSnapshot(`
       {
         "changesets": [],
         "initialVersions": {
@@ -45,8 +52,10 @@ describe("enterPre", () => {
     const cwd = await testdir({
       "package.json": JSON.stringify({
         private: true,
+        name: "root-pkg",
         workspaces: ["packages/*"],
       }),
+      "package-lock.json": "",
       "packages/pkg-a/package.json": JSON.stringify({
         name: "pkg-a",
         version: "1.0.0",
@@ -69,15 +78,17 @@ describe("enterPre", () => {
       }),
     });
     await expect(enterPre(cwd, "some-tag")).rejects.toBeInstanceOf(
-      PreEnterButInPreModeError
+      PreEnterButInPreModeError,
     );
   });
   it("should enter if already exited pre mode", async () => {
     const cwd = await testdir({
       "package.json": JSON.stringify({
         private: true,
+        name: "root-pkg",
         workspaces: ["packages/*"],
       }),
+      "package-lock.json": "",
       "packages/pkg-a/package.json": JSON.stringify({
         name: "pkg-a",
         version: "1.0.0",
@@ -100,8 +111,11 @@ describe("enterPre", () => {
       }),
     });
     await enterPre(cwd, "next");
-    expect(await fs.readJson(path.join(cwd, ".changeset", "pre.json")))
-      .toMatchInlineSnapshot(`
+    expect(
+      JSON.parse(
+        await fs.readFile(path.join(cwd, ".changeset", "pre.json"), "utf8"),
+      ),
+    ).toMatchInlineSnapshot(`
       {
         "changesets": [
           "slimy-dingos-whisper",
@@ -122,8 +136,10 @@ describe("exitPre", () => {
     const cwd = await testdir({
       "package.json": JSON.stringify({
         private: true,
+        name: "root-pkg",
         workspaces: ["packages/*"],
       }),
+      "package-lock.json": "",
       "packages/pkg-a/package.json": JSON.stringify({
         name: "pkg-a",
         version: "1.0.0",
@@ -147,8 +163,11 @@ describe("exitPre", () => {
     });
     await exitPre(cwd);
 
-    expect(await fs.readJson(path.join(cwd, ".changeset", "pre.json")))
-      .toMatchInlineSnapshot(`
+    expect(
+      JSON.parse(
+        await fs.readFile(path.join(cwd, ".changeset", "pre.json"), "utf8"),
+      ),
+    ).toMatchInlineSnapshot(`
       {
         "changesets": [],
         "initialVersions": {
@@ -164,8 +183,10 @@ describe("exitPre", () => {
     const cwd = await testdir({
       "package.json": JSON.stringify({
         private: true,
+        name: "root-pkg",
         workspaces: ["packages/*"],
       }),
+      "package-lock.json": "",
       "packages/pkg-a/package.json": JSON.stringify({
         name: "pkg-a",
         version: "1.0.0",
@@ -180,7 +201,7 @@ describe("exitPre", () => {
       ".changeset/config.json": JSON.stringify({}),
     });
     await expect(exitPre(cwd)).rejects.toBeInstanceOf(
-      PreExitButNotInPreModeError
+      PreExitButNotInPreModeError,
     );
   });
 });

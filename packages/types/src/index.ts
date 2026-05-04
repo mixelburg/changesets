@@ -1,4 +1,4 @@
-// NB: Bolt check uses a different dependnecy set to every other package.
+// NB: Bolt check uses a different dependency set to every other package.
 // You need think before you use this.
 const DEPENDENCY_TYPES = [
   "dependencies",
@@ -9,7 +9,7 @@ const DEPENDENCY_TYPES = [
 
 export type VersionType = "major" | "minor" | "patch" | "none";
 
-export type DependencyType = typeof DEPENDENCY_TYPES[number];
+export type DependencyType = (typeof DEPENDENCY_TYPES)[number];
 
 export type AccessType = "public" | "restricted";
 
@@ -84,10 +84,7 @@ export type Config = {
   ignore: ReadonlyArray<string>;
   /** This is supposed to be used with pnpm's `link-workspace-packages: false` and Berry's `enableTransparentWorkspaces: false` */
   bumpVersionsWithWorkspaceProtocolOnly?: boolean;
-  ___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH: Omit<
-    Required<ExperimentalOptions>,
-    "useCalculatedVersionForSnapshots"
-  >;
+  ___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH: Required<ExperimentalOptions>;
   snapshot: {
     useCalculatedVersion: boolean;
     prereleaseTemplate: string | null;
@@ -124,8 +121,6 @@ export type WrittenConfig = {
 export type ExperimentalOptions = {
   onlyUpdatePeerDependentsWhenOutOfRange?: boolean;
   updateInternalDependents?: "always" | "out-of-range";
-  /** @deprecated Since snapshot feature is now stable, you should migrate to use "snapshot.useCalculatedVersion". */
-  useCalculatedVersionForSnapshots?: boolean;
 };
 
 export type NewChangesetWithCommit = NewChangeset & { commit?: string };
@@ -138,13 +133,13 @@ export type ModCompWithPackage = ComprehensiveRelease & {
 export type GetReleaseLine = (
   changeset: NewChangesetWithCommit,
   type: VersionType,
-  changelogOpts: null | Record<string, any>
+  changelogOpts: null | Record<string, any>,
 ) => Promise<string>;
 
 export type GetDependencyReleaseLine = (
   changesets: NewChangesetWithCommit[],
   dependenciesUpdated: ModCompWithPackage[],
-  changelogOpts: any
+  changelogOpts: any,
 ) => Promise<string>;
 
 export type ChangelogFunctions = {
@@ -154,12 +149,12 @@ export type ChangelogFunctions = {
 
 export type GetAddMessage = (
   changeset: Changeset,
-  commitOptions: any
+  commitOptions: any,
 ) => Promise<string>;
 
 export type GetVersionMessage = (
   releasePlan: ReleasePlan,
-  commitOptions: any
+  commitOptions: any,
 ) => Promise<string>;
 
 export type CommitFunctions = {
@@ -175,3 +170,17 @@ export type PreState = {
   };
   changesets: string[];
 };
+
+export interface Package {
+  dir: string;
+  packageJson: PackageJSON;
+}
+
+export interface Packages {
+  rootDir: string;
+  rootPackage?: Package;
+  packages: Array<Package>;
+  tool: {
+    type: "yarn" | "pnpm" | "lerna" | "bolt" | "root" | (string & {});
+  };
+}
