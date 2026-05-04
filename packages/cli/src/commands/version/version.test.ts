@@ -110,7 +110,7 @@ describe("running version in a simple project", () => {
         ".changeset/config.json": JSON.stringify({}),
       });
       await expect(
-        version(cwd, defaultOptions, modifiedDefaultConfig)
+        version(cwd, defaultOptions, modifiedDefaultConfig),
       ).rejects.toThrow(ExitError);
       const loggerWarnCalls = mockedLogger.warn!.mock.calls;
       expect(loggerWarnCalls.length).toEqual(1);
